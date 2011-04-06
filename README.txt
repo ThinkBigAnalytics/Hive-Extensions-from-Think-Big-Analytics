@@ -8,7 +8,7 @@ create temporary function array_deref as 'com.thinkbiganalytics.hive.udf.UDFArra
 
 e.g.,
 
-select array_deref(get_json_full(json, '$.*.val),
+select array_deref(get_json_full(json, '$.*.val'),
   array_offset(get_json_full(json, '$.*.key'), 'two')
 
 run on
