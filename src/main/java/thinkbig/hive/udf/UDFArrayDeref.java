@@ -29,7 +29,7 @@ import org.apache.hadoop.io.Text;
 /**
  * UDFArrayDeref
  *
- * Attempt to work around Hive's
+ * UDF to dereference array elements... work around for Hive's
  * FAILED: Error in semantic analysis: line 33:27 Non Constant Expressions for Array Indexes not Supported device_uid
  */
 @Description(name = "array_offset",

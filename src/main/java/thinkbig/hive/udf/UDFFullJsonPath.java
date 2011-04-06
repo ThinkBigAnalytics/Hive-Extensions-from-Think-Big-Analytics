@@ -29,12 +29,14 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 import org.apache.hadoop.io.Text;
 
 /**
- * UDFFullJsonPath
+ * UDFFullJsonPath - 
+ * uses JSON Path from http://code.google.com/p/json-path/ to implement JSON Path
+ * supports multi-valued expressions
  *
  */
 @Description(name = "get_json_full",
 	     value = "_FUNC_(json_txt, path) - like get_json_object but it allows full json path and in general returns multiple results" )
-    public class UDFFullJsonPath extends UDF { //GenericUDTF {
+    public class UDFFullJsonPath extends UDF {
 
   // An LRU cache using a linked hash map - reused from UDFJson
   static class HashCache<K, V> extends LinkedHashMap<K, V> {
