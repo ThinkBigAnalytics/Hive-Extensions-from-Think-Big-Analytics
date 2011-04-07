@@ -15,7 +15,10 @@ run on
 
 { 'xyz' : { 'key' : 'one', 'val' : '11' }, {'key' : 'two', 'val', 'yes'} }  
 
-will return 
-"yes"
+will return "yes"
 
+You can also use more advanced JSONPath operations like:
 
+get_json_full(json, '$.*[?(@.KEY=two)].val')[0]
+
+which also returns "yes"
