@@ -85,7 +85,12 @@ public class MatchUDFUtil
 		    	found = algo.match(text, pattern);
 		    }
 		    else { 	
+
 		    	String[] patterns = pattern.split(PUNCTUATION);
+
+			// can use backIterator Split instead
+		    	// String[] patterns = Split(pattern, Locale.ENGLISH);
+			
 		    	for (int i = 0;  i < patterns.length; ++i) {
 		    		if (matchType == MatchType.AllWords) {
 		    			found &= algo.match(text, patterns[i]);
@@ -130,6 +135,82 @@ public class MatchUDFUtil
 	    text = text.replaceAll(PUNCTUATION, " ");
 	    System.out.print("Text & Pattern: " + text + "& " + pattern);
 		
-		return algo == null ? 0 : algo.countMatch(text.toLowerCase(), pattern.toLowerCase());
+	    return algo == null ? 0 : algo.countMatch(text.toLowerCase(), pattern.toLowerCase());
 	}
+
+     /**
+     * Split using BreakIterator
+     * @param text
+     * @return
+     */
+     public static String[] Split(String text, Locale locale) {
+	   
+       if (text == null) {
+    	   return null;
+       }
+    	 
+       BreakIterator boundary = BreakIterator.getWordInstance(locale);
+	   boundary.setText(text);
+	   // note the words may contain punctuation characters, get rid of them  
+       List<String> words = new ArrayList<String>();
+       
+       // take care of the first word specially
+       for (int p =  boundary.first(); p < boundary.next(); p++) {
+           if (Character.isLetter(text.codePointAt(p))) {
+               // a valid word
+        	   String word = text.substring(boundary.first(), boundary.next());
+        	   //System.out.println(word);
+    		   words.add(word);
+        	   break;
+           }
+       }
+       
+       int pos = 0;
+       while (pos != BreakIterator.DONE) {
+    	   Boundary wb = getNextWord(pos, text);
+    	   if (wb.end != BreakIterator.DONE) {
+    		   String word = text.substring(wb.start, wb.end);
+    		   //System.out.println(word);
+    		   words.add(word);
+    	   }
+    	   pos = wb.end;
+       }
+
+       return (String[])words.toArray(new String[0]);
+     }
+     
+     /**
+      * represents word boundary
+      * @author sandipandey
+      *
+      */
+     private static class Boundary {
+    	int start, end;
+    	Boundary(int s, int e) {
+    		start = s;
+    		end = e;
+    	}
+     }
+     
+     /**
+      * uses heuristic to find whether the content between two boundaries is a word
+      * @param pos
+      * @param text
+      * @return next word start and end pos
+      */
+     public static Boundary getNextWord(int pos, String text) {
+         BreakIterator wordBoundary = BreakIterator.getWordInstance();
+         wordBoundary.setText(text);
+         int last = wordBoundary.following(pos);
+         int current = wordBoundary.next();
+         while (current != BreakIterator.DONE) {
+             for (int p = last; p < current; p++) {
+                 if (Character.isLetter(text.codePointAt(p)))
+                     return new Boundary(last, current);
+             }
+             last = current;
+             current = wordBoundary.next();
+         }
+         return new Boundary(last, BreakIterator.DONE);
+     }
 }
