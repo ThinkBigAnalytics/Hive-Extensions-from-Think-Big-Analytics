@@ -45,17 +45,16 @@ public class MatchUDFUtil
 		AllWords,	// check if at least one word in the pattern matches (AND)
 		WholePhrase // check if the entire phrase matches
 	}
-	
-	public static boolean match(String text, String pattern) {
-		return match(text, pattern, "keyword", MatchType.SomeWords);
-	}
-	
-	// TODO: should use enum for algorithm type
-	// then use Enum.valueOf for String to enum conversion
-	public static boolean match(String text, String pattern, String algoType, MatchType matchType) {
-		
-		    MatchAlgorithm algo = null;
-		
+
+	/**
+	 * gets the actual algorithm class
+	 * @param algoType
+	 * @return the concrete algorithm class
+	 */
+	public static MatchAlgorithm getAlgo(String algoType) {
+		 
+			MatchAlgorithm algo = null;
+			
 		    algoType = algoType == null ? "keyword" : algoType;
 		    
 		    if (algoType.equalsIgnoreCase("regex")) {
@@ -73,24 +72,66 @@ public class MatchUDFUtil
 			else { // default is "keyword"
 				algo = new KeywordBasedMatch();
 		    }
+		    return algo;
+	}
+	
+	public static boolean match(String text, String pattern) {
+		return match(text, pattern, "keyword", MatchType.SomeWords);
+	}
+	
+	public static boolean match(String text, String pattern, String algoType, MatchType matchType) {
+		return match(text, pattern, algoType, matchType, true);	// use sentence type split using BackIterator
+	}
+	
+	// TODO: should use enum for algorithm type
+	// then use Enum.valueOf for String to enum conversion
+	/**
+	 * matches text with pattern
+	 * @param text
+	 * @param pattern
+	 * @param algoType
+	 * @param matchType
+	 * @return true is found a match, false otherwise
+	 */
+	public static boolean match(String text, String pattern, String algoType, MatchType matchType,
+											 boolean sentenceStyle) {
+		
+			algoType = algoType == null ? "keyword" : algoType;	    
+	    	MatchAlgorithm algo = getAlgo(algoType);
 
-		    text = text.toLowerCase().replaceAll(PUNCTUATION, " ");
+	    	// get rid of the punctuation from text
+    		if (!sentenceStyle) {
+		    	text = text.toLowerCase().replaceAll(PUNCTUATION, " "); 		
+	    	}
+	    	else {
+	    		String[] splits = splitSentence(text.toLowerCase(), Locale.ENGLISH);
+	    		text = "";
+	    		for (String textSplit : splits) {
+	    			text += textSplit + " ";
+	    		}
+	    	}
+    		
 		    if (!algoType.equalsIgnoreCase("regex")) {
-		    	pattern = pattern.toLowerCase().replaceAll(PUNCTUATION, " ");
+		    	// get rid of the punctuation from pattern
+	    		if (!sentenceStyle) {
+	    			pattern = pattern.toLowerCase().replaceAll(PUNCTUATION, " ");
+	    		}
+	    		else {
+		    		String[] splits = splitSentence(pattern.toLowerCase(), Locale.ENGLISH);
+		    		pattern = "";
+		    		for (String patSplit : splits) {
+		    			pattern += patSplit + " ";
+		    		}
+		    	} 
 		    }
-		    //System.out.println("Text & Pattern: " + text + "& " + pattern);
+		    System.out.println("Text & Pattern: " + text + "& " + pattern);
 		    
 			boolean found = matchType == MatchType.AllWords? true : false;
 		    if (matchType == MatchType.WholePhrase) {
 		    	found = algo.match(text, pattern);
 		    }
 		    else { 	
-
-		    	String[] patterns = pattern.split(PUNCTUATION);
-
-			// can use backIterator Split instead
-		    	// String[] patterns = Split(pattern, Locale.ENGLISH);
-			
+		    	String[] patterns = pattern.split(" ");
 		    	for (int i = 0;  i < patterns.length; ++i) {
 		    		if (matchType == MatchType.AllWords) {
 		    			found &= algo.match(text, patterns[i]);
@@ -135,15 +176,15 @@ public class MatchUDFUtil
 	    text = text.replaceAll(PUNCTUATION, " ");
 	    System.out.print("Text & Pattern: " + text + "& " + pattern);
 		
-	    return algo == null ? 0 : algo.countMatch(text.toLowerCase(), pattern.toLowerCase());
+		return algo == null ? 0 : algo.countMatch(text.toLowerCase(), pattern.toLowerCase());
 	}
-
-     /**
+	
+	 /**
      * Split using BreakIterator
      * @param text
      * @return
      */
-     public static String[] Split(String text, Locale locale) {
+     public static String[] splitSentence(String text, Locale locale) {
 	   
        if (text == null) {
     	   return null;
