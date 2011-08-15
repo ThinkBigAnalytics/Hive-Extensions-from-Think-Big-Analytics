@@ -27,7 +27,7 @@ public class LCStrMatch extends MatchAlgorithm { // Longest common substring mat
   public boolean match(String text, String pattern) {
     String match = LCStr(text, pattern);
     System.out.println(match);
-    return match.length() / (1.0 * pattern.length()) > MIN_LCS_MATCH_FRAC;
+    return match.length() / (1.0 * pattern.length()) >= MIN_LCS_MATCH_FRAC;
   }
 
   public String LCStr(String a, String b) {

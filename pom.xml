@@ -104,6 +104,17 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+
+	    <repository>
+	      <id>central</id>
+	      <name>Maven Repository Switchboard</name>
+	      <layout>default</layout>
+	      <url>http://repo1.maven.org/maven2</url>
+	      <snapshots>
+		<enabled>false</enabled>
+	      </snapshots>
+	    </repository>
+
 	</repositories>
 	
 	<dependencies>
@@ -123,7 +134,7 @@
 			<version>0.90.1-CDH3B4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.hive</groupId>
+			<groupId>org.apache.hadoop.hive</groupId>
 			<artifactId>hive-exec</artifactId>
 			<version>0.7.0-CDH3B4</version>
 		</dependency>
@@ -135,9 +146,9 @@
 			<scope>compile</scope>
 		</dependency>		
 		<dependency>
-			<groupId>com.jayway</groupId>
-			<artifactId>jsonpath</artifactId>
-			<version>0.5.4-SNAPSHOT</version>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>0.5.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>

@@ -20,9 +20,13 @@
 
 package thinkbig.hive.udf;
 
+import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 public class MatchUDFUtil
 {
-	// TODO: use natural language parser punctuation, mimic hive sentences UDF
 	private static final String PUNCTUATION = "[;\\.\\-_,\\|\\&\\%\\*\\?\\!\\^\\~\\s+\\[\\]\\+/'\"@#=\\>\\<\\(\\)\\{\\}\\:]+";
 	
 	/* private enum AlgoType
@@ -96,7 +100,7 @@ public class MatchUDFUtil
 	public static boolean match(String text, String pattern, String algoType, MatchType matchType,
 											 boolean sentenceStyle) {
 		
-			algoType = algoType == null ? "keyword" : algoType;	    
+		algoType = algoType == null ? "keyword" : algoType;	    
 	    	MatchAlgorithm algo = getAlgo(algoType);
 
 	    	// get rid of the punctuation from text

@@ -28,7 +28,7 @@ import thinkbig.hive.udf.MatchUDFUtil.MatchType;
 
 // break pattern phrase into words and then match
 // if all the words found => return true, ow return false
-public final class MatchAllWordsWithMetric extends UDF {  
+public final class UDFMatchAllWordsWithMetric extends UDF {  
   public BooleanWritable evaluate(final Text text, final Text pattern, Text algoType) {
     if (text == null || pattern == null || algoType == null) { return null; }
     return new BooleanWritable(MatchUDFUtil.match(text.toString(), pattern.toString(), algoType.toString(), MatchType.AllWords));
