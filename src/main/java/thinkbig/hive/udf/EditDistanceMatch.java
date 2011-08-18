@@ -20,6 +20,8 @@
 
 package thinkbig.hive.udf;
 
+import java.util.Locale;
+
 public class EditDistanceMatch extends MatchAlgorithm {
 
   protected static final double MAX_EDIT_MATCH_FRAC = 0.3;  // threshold, at most 30% mismatch
@@ -50,15 +52,20 @@ public class EditDistanceMatch extends MatchAlgorithm {
   }
 
   public boolean match(String text, String pattern) {
-    String[] texts = text.split("\\s+");
-	int minDist = 9999;
-	for (int i = 0; i < texts.length; ++i) {
-		int dist = EditDistance(texts[i], pattern);
-		if (dist < minDist) {
-			minDist = dist;
-		}
+
+    //String[] texts = text.split(MatchUDFUtil.PUNCTUATION);
+    String[] texts = MatchUDFUtil.splitSentence(text, Locale.ENGLISH);
+
+    int minDist = 9999;
+    for (int i = 0; i < texts.length; ++i) {
+	int dist = EditDistance(texts[i], pattern);
+	if (dist < minDist) {
+		minDist = dist;
 	}
-    System.out.println(minDist);
+    }
+
+    //System.out.println(minDist);
+
     return minDist / (1.0 * pattern.length()) <= MAX_EDIT_MATCH_FRAC;
   }
   

@@ -57,7 +57,7 @@ public class MatchUDFUtil
 	 */
 	public static MatchAlgorithm getAlgo(String algoType) {
 		 
-			MatchAlgorithm algo = null;
+		    MatchAlgorithm algo = null;
 			
 		    algoType = algoType == null ? "keyword" : algoType;
 		    
