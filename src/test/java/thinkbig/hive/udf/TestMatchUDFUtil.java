@@ -38,12 +38,12 @@ public class TestMatchUDFUtil extends TestCase {
 	
 	@Before
 	public void setup(){
-		text = "lehman,, aksdjfhalskd-jfhasdkljf brothers has been bankrupt. Lehman	now ;.'	brothers mnsdfb,mnsd lehman jasdfvjhasdfadjhfgaf defaullt bank";
+		text = "king,, aksdjfhalskd-jfhasdkljf singers has been disbanded. King	now ;.'	singers mnsdfb,mnsd king jasdfvjhasdfadjhfgaf defaullt band";
 	}
 	
 	@Test
 	public void testSplitUsingBreakIterator() {
-		   String[] words = MatchUDFUtil.splitSentence("Lehman Brothers Holdings Inc...; (former NYSE ticker symbol LEH) ", Locale.ENGLISH);
+		   String[] words = MatchUDFUtil.splitSentence("King Brothers Holdings Inc...; (former big ticker symbol KKQ) ", Locale.ENGLISH);
 		   /*for (String word: words) {
 			   System.out.println(word);
 		   }*/
@@ -52,77 +52,51 @@ public class TestMatchUDFUtil extends TestCase {
 
 	@Test
 	public void testKeyword() {
-		text = "lehman,, aksdjfhalskd-jfhasdkljf brothers has been bankrupt. Lehman	now ;.'	brothers mnsdfb,mnsd lehman jasdfvjhasdfadjhfgaf defaullt bank";
-		assertTrue(!MatchUDFUtil.match(text, "lehman brothers", "keyword", MatchType.WholePhrase));  // whole phrase match
-		assertTrue(MatchUDFUtil.match(text, "lehman brothers", "keyword", MatchType.AllWords));  	// all keywords match
+		text = "king,, aksdjfhalskd-jfhasdkljf singers has been disbanded. King	now ;.'	singers mnsdfb,mnsd king jasdfvjhasdfadjhfgaf defaullt band";
+		assertTrue(!MatchUDFUtil.match(text, "king singers", "keyword", MatchType.WholePhrase));  // whole phrase match
+		assertTrue(MatchUDFUtil.match(text, "king singers", "keyword", MatchType.AllWords));  	// all keywords match
 		assertTrue(!MatchUDFUtil.match(text, "value_277 abcd", "value_3", MatchType.WholePhrase));   // whole phrase match		
 	}
 		
 	@Test
 	public void testEdit() {
-		text = "lehman,, aksdjfhalskd-jfhasdkljf brothers has been bankrupt. Lehman	now ;.'	brothers mnsdfb,mnsd lehman jasdfvjhasdfadjhfgaf defaullt bank";
-		assertTrue(MatchUDFUtil.match(text, "bankrupcy", "edit", MatchType.AllWords));
-		assertTrue(MatchUDFUtil.match(text, "defaults Greece", "edit", MatchType.SomeWords));
+		text = "king,, aksdjfhalskd-jfhasdkljf singers has been banned. King	now ;.'	singers mnsdfb,mnsd king jasdfvjhasdfadjhfgaf defaullt band";
+		assertTrue(MatchUDFUtil.match(text, "banner", "edit", MatchType.AllWords));
+		assertTrue(MatchUDFUtil.match(text, "defaults Stones", "edit", MatchType.SomeWords));
 	}
 	
 	@Test
 	public void testLCStr() {
-		text = "lehman,, aksdjfhalskd-jfhasdkljf brothers has been bankrupt. Lehman	now ;.'	brothers mnsdfb,mnsd lehman jasdfvjhasdfadjhfgaf defaullt bank";
-		assertTrue(MatchUDFUtil.match(text, "bankrupcy", "lcstr", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match(text, "brothers flock together", "lcstr", MatchType.SomeWords));
+		text = "king,, aksdjfhalskd-jfhasdkljf singers has been disbanded. King	now ;.'	singers mnsdfb,mnsd king jasdfvjhasdfadjhfgaf defaullt band";
+		assertTrue(MatchUDFUtil.match(text, "disbanded", "lcstr", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.match(text, "singers flock together", "lcstr", MatchType.SomeWords));
 	}
 	
 	@Test
 	public void testLCS() {
-		text = "lehman,, aksdjfhalskd-jfhasdkljf brothers has been bankrupt. Lehman	now ;.'	brothers mnsdfb,mnsd lehman jasdfvjhasdfadjhfgaf defaullt bank";
-		assertTrue(MatchUDFUtil.match(text, "bankruptcy brothers", "lcs", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match(text, "lehman bro together", "lcs", MatchType.SomeWords));
+		text = "king,, aksdjfhalskd-jfhasdkljf singers has been disbanded. King	now ;.'	singers mnsdfb,mnsd king jasdfvjhasdfadjhfgaf defaullt band";
+		assertTrue(MatchUDFUtil.match(text, "disbandedcy singers", "lcs", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.match(text, "king bro together", "lcs", MatchType.SomeWords));
 	}
 	
 	@Test
 	public void testRegex() {
-		text = "lehman,, aksdjfhalskd-jfhasdkljf brothers has been bankrupt. Lehman	now ;.'	brothers mnsdfb,mnsd lehman jasdfvjhasdfadjhfgaf defaullt bank";
-		assertTrue(!MatchUDFUtil.match(text, "lehman\\s+brothers\\s+.*bankrupt", "regex", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match(text, "lehman\\s+brothers|lehman|bankruptcy", "regex", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.countMatch(text, "lehman\\s+brothers|lehman|bankrupt", "regex") == 4);
+		text = "king,, aksdjfhalskd-jfhasdkljf singers has been disbanded. King	now ;.'	singers mnsdfb,mnsd king jasdfvjhasdfadjhfgaf defaullt band";
+		assertTrue(!MatchUDFUtil.match(text, "king\\s+singers\\s+.*disbanded", "regex", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.match(text, "king\\s+singers|king|disbandedcy", "regex", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.countMatch(text, "king\\s+singers|king|disbanded", "regex") == 4);
 	}
 
 	@Test
 	public void testAll() {
 		
 		// whole phrase match
-		assertTrue(!MatchUDFUtil.match("lehman not brothers", "lehman BROTHERS", "keyword", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match("lehman	//	brothers		collapses ", "lehman-BROTHERS", "keyword", MatchType.WholePhrase, false));	// split punctuation
-		assertTrue(!MatchUDFUtil.match("lehman	//	brothers		collapses ", "lehman-BROTHERS", "keyword", MatchType.WholePhrase, true));	// sentence type
-		assertTrue(MatchUDFUtil.match("lehman	//	brothers		collapses ", "lehman - BROTHERS", "keyword", MatchType.WholePhrase, true));	// sentence type
+		assertTrue(!MatchUDFUtil.match("king not singers", "king SINGERS", "keyword", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.match("king	//	singers		collapses ", "king-SINGERS", "keyword", MatchType.WholePhrase, false));	// split punctuation
+		assertTrue(!MatchUDFUtil.match("king	//	singers		collapses ", "king-SINGERS", "keyword", MatchType.WholePhrase, true));	// sentence type
+		assertTrue(MatchUDFUtil.match("king	//	singers		collapses ", "king - SINGERS", "keyword", MatchType.WholePhrase, true));	// sentence type
 		
-		String textLong = "Lehman Brothers Holdings Inc. (former NYSE ticker symbol LEH) " +
-			   "(pronounced /'li:man/) was a global financial services firm. " +
-			   "Before declaring bankruptcy in 2008, Lehman was the fourth largest " +
-			   "investment bank in the USA (behind Goldman Sachs, Morgan Stanley, and Merrill Lynch), " +
-			   "doing business in investment banking, equity and fixed-income sales and trading " +
-			   "(especially U.S. Treasury securities), market research, investment management, " +
-			   "private equity, and private banking.On September 15, 2008, the firm filed for Chapter 11 " +
-			   "bankruptcy protection following the massive exodus of most of its clients, drastic losses in " +
-			   "its stock, and devaluation of its assets by credit rating agencies. The filing marked the largest " +
-			   "bankruptcy in U.S. history,[4] and is thought to have played a major role in the unfolding of the " +
-			   "late-2000s global financial crisis. The following day, Barclays announced its agreement to purchase, " +
-			   "subject to regulatory approval, Lehman's North American investment-banking and trading divisions " +
-			   "along with its New York headquarters building.[5][6] On September 20, 2008, a revised version of " +
-			   "that agreement was approved by US Bankruptcy Court Judge James M. Peck.[7] The next week, " +
-			   "Nomura Holdings announced that it would acquire Lehman Brothers' franchise in the Asia-Pacific " +
-			   "region, including Japan, Hong Kong and Australia,[8] as well as Lehman Brothers' investment banking" +
-			   " and equities businesses in Europe and the Middle East. The deal became effective on " +
-			   "October 13, 2008.[9]";
-		assertTrue(MatchUDFUtil.match(textLong, "lEhmAn * BROTHERS", "keyword", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match(textLong, "global Financial Crisis", "keyword", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match(textLong, "Lehman brotherS bankrupt declarings", "edit", MatchType.AllWords));
-		assertTrue(MatchUDFUtil.match(textLong, "Lehman brothers, Morgan Stanley, Goldman Sachs, Merrill Lynch", "keyword", MatchType.AllWords));
-		assertTrue(MatchUDFUtil.match(textLong, "market research investment management", "keyword", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.countMatch(textLong, "lehman") == 5);
-		assertTrue(MatchUDFUtil.match(textLong, "the largest bankruptcy in history", "keyword", MatchType.AllWords));
-		
-		textLong = "Non-negative matrix factorization (NMF) is a group of algorithms in multivariate analysis and " +
+		String textLong = "Non-negative matrix factorization (NMF) is a group of algorithms in multivariate analysis and " +
 				"linear algebra where a matrix, , is factorized into (usually) two matrices,  and  : " +
 				"Factorization of matrices is generally non-unique, and a number of different methods of doing " +
 				"so have been developed (e.g. principal component analysis and singular value decomposition) by " +
@@ -130,8 +104,8 @@ public class TestMatchUDFUtil extends TestCase {
 				"in that it enforces the constraint that the factors W and H must be non-negative, i.e., all " +
 				"elements must be equal to or greater than zero";
 		assertTrue(MatchUDFUtil.match(textLong, "non Negative matrix/factorization", "keyword", MatchType.WholePhrase, false));	 // split punctuation
-		assertTrue(!MatchUDFUtil.match(textLong, "non Negative matrix/factorization", "keyword", MatchType.WholePhrase, true));	 // senetencetype
-		assertTrue(MatchUDFUtil.match(textLong, "non-Negative matrix / factorization", "keyword", MatchType.WholePhrase, true)); // senetencetype
+		assertTrue(!MatchUDFUtil.match(textLong, "non Negative matrix/factorization", "keyword", MatchType.WholePhrase, true));	 // sentence type
+		assertTrue(MatchUDFUtil.match(textLong, "non-Negative matrix / factorization", "keyword", MatchType.WholePhrase, true)); // sentence type
 		assertTrue(MatchUDFUtil.match(textLong, "factorizing matrices", "lcstr", MatchType.AllWords));
 		assertTrue(MatchUDFUtil.match(textLong, "principal component singular values", "edit", MatchType.AllWords));
 		assertTrue(MatchUDFUtil.match(textLong, "principle component-analysis", "lcs", MatchType.WholePhrase));
@@ -166,15 +140,15 @@ public class TestMatchUDFUtil extends TestCase {
 		assertTrue(MatchUDFUtil.match(textLong, "primality test + Neeraj Kayal", "keyword", MatchType.AllWords, true));   // sentence type
 		assertTrue(MatchUDFUtil.match(textLong, "P!=NP complexity problems", "keyword", MatchType.SomeWords));
 		
-		assertTrue(MatchUDFUtil.match("lehman not brothers", "Lehman Brothers", "keyword", MatchType.AllWords));
-		assertTrue(MatchUDFUtil.match("lehmanBrothers", "Lehman Brothers default collapse", "keyword", MatchType.SomeWords));
-		assertTrue(MatchUDFUtil.match("'LeHman'.-.(-:brothers:-)", "%Lehman/***/Brothe^rs%.", "lcstr", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match("Le'H'man.-.(-:bro#thers:-)", "%Lehman/***/Bro^thers%.", "lcs", MatchType.WholePhrase));
-		assertTrue(!MatchUDFUtil.match("lehman BANKruptcy", "bankrupted", "keyword", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match("lehman bankruptcy", "lehman BANKrupted", "edit", MatchType.AllWords));
-		assertTrue(MatchUDFUtil.match("Breaking News: 'lehman and brothers' - collosal financial firm"
-				    			+ ", collapses and defaults this year to bankruptcy", 
-				    			"lehmanN - brrothers collapsed:   defaulter bankrupted", "lcstr", MatchType.AllWords));
+		assertTrue(MatchUDFUtil.match("king not singers", "King Singers", "keyword", MatchType.AllWords));
+		assertTrue(MatchUDFUtil.match("kingSingers", "King Singers default collapse", "keyword", MatchType.SomeWords));
+		assertTrue(MatchUDFUtil.match("'KiNg'.-.(-:singgers:-)", "%King/***/Singge^rs%.", "lcstr", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.match("Ki'N'g-.(-:sin#gers:-)", "%King/***/Sin^gers%.", "lcs", MatchType.WholePhrase));
+		assertTrue(!MatchUDFUtil.match("king BANKruptcy", "disbandeded", "keyword", MatchType.WholePhrase));
+		assertTrue(MatchUDFUtil.match("king disbanded", "king DISBanded", "edit", MatchType.AllWords));
+		assertTrue(MatchUDFUtil.match("Breaking News: 'king and singers' - collosal musical group"
+				    			+ ", collapses and ends this year in disbandedcy", 
+				    			"kingG - singers collapsed: disbanded", "lcstr", MatchType.AllWords));
 
 		assertTrue(MatchUDFUtil.match("This is cool. Ram went there", "cool Ram"));
 		assertTrue(MatchUDFUtil.match("This is cool. Ram went there", "cool Ram", "keyword", MatchType.AllWords));

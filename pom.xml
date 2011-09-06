@@ -64,19 +64,19 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>cdh.snapshot.repo</id>
-			<url>https://repository.cloudera.com/content/repositories/snapshots</url>
-			<name>Cloudera Snapshot Repository</name>
+			<id>cdh.repo</id>
+			<url>https://repository.cloudera.com/content/repositories/releases</url>
+			<name>Cloudera Release Repository</name>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 		<repository>
-			<id>cdh.repo</id>
-			<url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
-			<name>Cloudera Repository</name>
+			<id>cdh.snapshot.repo</id>
+			<url>https://repository.cloudera.com/content/repositories/snapshots</url>
+			<name>Cloudera Snapshot Repository</name>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 <!--
@@ -136,22 +136,22 @@
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
-			<version>0.20.2-CDH3B4</version>
+			<version>0.20.2-cdh3u0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase</artifactId>
-			<version>0.90.1-CDH3B4</version>
+			<version>0.90.1-cdh3u0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop.hive</groupId>
 			<artifactId>hive-exec</artifactId>
-			<version>0.7.0-CDH3B4</version>
+			<version>0.7.0-cdh3u0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.flume</groupId>
 			<artifactId>flume</artifactId>
-			<version>0.9.3-CDH3B4</version>
+			<version>0.9.3-cdh3u0</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>		
