@@ -76,64 +76,6 @@ public class MatchUDFUtil {
         return match(text, pattern, algoType, matchType, true); // use sentence type split using BackIterator
     }
 
-    // TODO: should use enum for algorithm type
-    // then use Enum.valueOf for String to enum conversion
-    /**
-     * matches text with pattern
-     * 
-     * @param text
-     * @param pattern
-     * @param algoType
-     * @param matchType
-     * @return true is found a match, false otherwise
-     */
-    public static boolean match(String text, String pattern, String algoType, MatchType matchType, boolean sentenceStyle) {
-
-        algoType = algoType == null ? "keyword" : algoType;
-        MatchAlgorithm algo = getAlgo(algoType);
-
-        // get rid of the punctuation from text
-        if (!sentenceStyle) {
-            text = normalizeSpaces(text);            
-        }
-        else {
-            text = normalizeSentence(text);
-        }
-
-        if (!algoType.equalsIgnoreCase("regex")) {
-            // get rid of the punctuation from pattern
-            if (!sentenceStyle) {
-                pattern = pattern.toLowerCase().replaceAll(PUNCTUATION, " ");
-            }
-            else {
-                String[] splits = splitSentence(pattern.toLowerCase(), Locale.ENGLISH);
-                pattern = "";
-                for (String patSplit : splits) {
-                    pattern += patSplit + " ";
-                }
-            }
-        }
-        //System.out.println("Text & Pattern: " + text + "& " + pattern);
-
-        boolean found = matchType == MatchType.AllWords ? true : false;
-        if (matchType == MatchType.WholePhrase) {
-            found = algo.match(text, pattern);
-        }
-        else {
-            String[] patterns = pattern.split(" ");
-            for (int i = 0; i < patterns.length; ++i) {
-                if (matchType == MatchType.AllWords) {
-                    found &= algo.match(text, patterns[i]);
-                }
-                else { // default: check if at least one word in the pattern matches
-                    found |= algo.match(text, patterns[i]);
-                }
-                // ToDo: add weights to words from the pattern
-            }
-        }
-        //System.out.println(found);
-        return found;
-    }
 
     // An LRU cache using a linked hash map
     static class HashCache<K, V> extends LinkedHashMap<K, V> {
@@ -155,31 +97,94 @@ public class MatchUDFUtil {
 
     }
 
-    static HashCache<String, String> spaceNormalized = new HashCache<String, String>();
-    static HashCache<String, String> sentenceNormalized = new HashCache<String, String>();
+    static HashCache<String, String> patternPunctuationNormalized = new HashCache<String, String>();
+    static HashCache<String, String> patternSentenceNormalized = new HashCache<String, String>();
+    static HashCache<String, String[]> patternSplits = new HashCache<String, String[]>();
     
-    private static String normalizeSpaces(String text) {
-        String normalized = spaceNormalized.get(text);
-        if (normalized == null) {
-            normalized = text.toLowerCase().replaceAll(PUNCTUATION, " ");
-            spaceNormalized.put(text, normalized);
-        }
-        return normalized;
-    }
+    // TODO: should use enum for algorithm type
+    // then use Enum.valueOf for String to enum conversion
+    /**
+     * matches text with pattern
+     * 
+     * @param text
+     * @param pattern
+     * @param algoType
+     * @param matchType
+     * @return true is found a match, false otherwise
+     */
+    public static boolean match(String text, String pattern, String algoType, MatchType matchType, boolean sentenceStyle) {
 
-    private static String normalizeSentence(String text) {
-        String normalized = sentenceNormalized.get(text);
-        if (normalized == null) {        
+        algoType = algoType == null ? "keyword" : algoType;
+        MatchAlgorithm algo = getAlgo(algoType);
+
+        // get rid of the punctuation from text
+        if (!sentenceStyle) {
+            text = text.toLowerCase().replaceAll(PUNCTUATION, " ");            
+        }
+        else {
             String[] splits = splitSentence(text.toLowerCase(), Locale.ENGLISH);
             StringBuilder holder = new StringBuilder();
             for (String textSplit : splits) {
                 holder.append(textSplit);
                 holder.append(' ');
             }
-            normalized = holder.toString();
-            sentenceNormalized.put(text, normalized);
+            text = holder.toString();
         }
-        return normalized;
+
+        if (!algoType.equalsIgnoreCase("regex")) {
+            
+            // get rid of the punctuation from pattern
+            if (!sentenceStyle) {
+                String result = patternPunctuationNormalized.get(pattern);
+                if (result == null) {
+                    result = pattern.toLowerCase().replaceAll(PUNCTUATION, " ");
+                    patternPunctuationNormalized.put(pattern, result);
+                }
+                pattern = result;
+            }
+            else {
+                String result = patternSentenceNormalized.get(pattern);
+                if (result == null) {
+                    String[] splits = splitSentence(pattern.toLowerCase(), Locale.ENGLISH);
+                    StringBuilder pat = new StringBuilder();
+                    for (String patSplit : splits) {
+                        pat.append(patSplit);
+                        pat.append(' ');
+                    }
+                    result = pat.toString();
+                    patternSentenceNormalized.put(pattern, result);
+                }
+                pattern = result;
+            }
+        }
+        //System.out.println("Text & Pattern: " + text + "& " + pattern);
+
+        boolean found = matchType == MatchType.AllWords ? true : false;
+        if (matchType == MatchType.WholePhrase) {
+            found = algo.match(text, pattern);
+        }
+        else {
+            String[] patterns = patternSplits.get(pattern);
+            if (patterns == null) {
+                patterns = pattern.split(" ");
+                patternSplits.put(pattern, patterns);
+            }
+            for (int i = 0; i < patterns.length; ++i) {
+                if (matchType == MatchType.AllWords) {
+                    found &= algo.match(text, patterns[i]);
+                    if (!found)
+                        return false;
+                }
+                else { // default: check if at least one word in the pattern matches
+                    found |= algo.match(text, patterns[i]);
+                    if (found)
+                        return true;
+                }
+                // ToDo: add weights to words from the pattern
+            }
+        }
+        //System.out.println(found);
+        return found;
     }
 
     public static int countMatch(String text, String pattern) {
