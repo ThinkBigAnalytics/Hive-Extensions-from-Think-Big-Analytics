@@ -38,7 +38,7 @@ public class RegexMatch extends MatchAlgorithm {
 	  Matcher matcher = this.pattern.matcher(text);
 	  int count = 0;
 	  while (matcher.find()) {
-		 System.out.println("group: " + matcher.group());
+		 //System.out.println("group: " + matcher.group());
 		 ++count;
 	  }
 	  return count;

@@ -26,7 +26,7 @@ public class LCSMatch extends MatchAlgorithm { // Longest common subsequence mat
 
   public boolean match(String text, String pattern) {
     int len = LCS(text, pattern);
-    System.out.println("length: " + len);
+    //System.out.println("length: " + len);
     return len / (1.0 * pattern.length()) >= MIN_LCS_MATCH_FRAC;
   }
 

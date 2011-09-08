@@ -113,7 +113,7 @@ public class MatchUDFUtil {
                 }
             }
         }
-        System.out.println("Text & Pattern: " + text + "& " + pattern);
+        //System.out.println("Text & Pattern: " + text + "& " + pattern);
 
         boolean found = matchType == MatchType.AllWords ? true : false;
         if (matchType == MatchType.WholePhrase) {
@@ -131,7 +131,7 @@ public class MatchUDFUtil {
                 // ToDo: add weights to words from the pattern
             }
         }
-        System.out.println(found);
+        //System.out.println(found);
         return found;
     }
 

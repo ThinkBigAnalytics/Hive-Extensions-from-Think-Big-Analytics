@@ -23,7 +23,7 @@ package thinkbig.hive.udf;
 public class KeywordBasedMatch extends MatchAlgorithm {
 
   public boolean match(String text, String pattern) {
-	System.out.println(text + ":" + pattern);  
+	//System.out.println(text + ":" + pattern);  
     return text.indexOf(pattern) != -1;
   }
   
