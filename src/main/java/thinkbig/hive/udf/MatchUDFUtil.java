@@ -31,6 +31,7 @@ public class MatchUDFUtil {
      * REGEX, // regex match KMP, BOYERMOORE, RABINKARP, SUFFIXTREE, AHOCORASICK //... }
      */
 
+    //TODO: use Aho-Corasick for an efficient implementation of some words and all words
     public enum MatchType {
         SomeWords, // check if at least one word in the pattern matches (OR)
         AllWords, // check if at least one word in the pattern matches (AND)
@@ -119,7 +120,7 @@ public class MatchUDFUtil {
 
         // get rid of the punctuation from text
         if (!sentenceStyle) {
-            text = text.toLowerCase().replaceAll(PUNCTUATION, " ");            
+            text = toCanoncial(text);
         }
         else {
             String[] splits = splitSentence(text.toLowerCase(), Locale.ENGLISH);
@@ -137,7 +138,7 @@ public class MatchUDFUtil {
             if (!sentenceStyle) {
                 String result = patternPunctuationNormalized.get(pattern);
                 if (result == null) {
-                    result = pattern.toLowerCase().replaceAll(PUNCTUATION, " ");
+                    result = toCanoncial(pattern);
                     patternPunctuationNormalized.put(pattern, result);
                 }
                 pattern = result;
@@ -185,6 +186,21 @@ public class MatchUDFUtil {
         }
         //System.out.println(found);
         return found;
+    }
+
+    private static String toCanoncial(String text) {
+        StringBuilder canonical = new StringBuilder();
+        for (int i=0; i<text.length(); i++) {
+            int c = text.charAt(i);
+            if (Character.isUpperCase(c)) {
+                canonical.append((char)Character.toLowerCase(c));
+            } else if (Character.isLetterOrDigit(c)) {
+                canonical.append((char)c);
+            } else {
+                canonical.append(' ');
+            }
+        }
+        return canonical.toString();            
     }
 
     public static int countMatch(String text, String pattern) {
