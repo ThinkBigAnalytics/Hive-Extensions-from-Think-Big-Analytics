@@ -91,9 +91,9 @@ public class TestMatchUDFUtil extends TestCase {
 	public void testAll() {
 		
 		// whole phrase match
-		assertTrue(!MatchUDFUtil.match("king not singers", "king SINGERS", "keyword", MatchType.WholePhrase));
-		assertTrue(MatchUDFUtil.match("king	//	singers		collapses ", "king-SINGERS", "keyword", MatchType.WholePhrase, false));	// split punctuation
-		assertTrue(!MatchUDFUtil.match("king	//	singers		collapses ", "king-SINGERS", "keyword", MatchType.WholePhrase, true));	// sentence type
+		assertFalse(MatchUDFUtil.match("king not singers", "king SINGERS", "keyword", MatchType.WholePhrase));
+		assertFalse(MatchUDFUtil.match("king	//	singers		collapses ", "king-SINGERS", "keyword", MatchType.WholePhrase, false));	// split punctuation
+		assertFalse(MatchUDFUtil.match("king	//	singers		collapses ", "king-SINGERS", "keyword", MatchType.WholePhrase, true));	// sentence type
 		assertTrue(MatchUDFUtil.match("king	//	singers		collapses ", "king - SINGERS", "keyword", MatchType.WholePhrase, true));	// sentence type
 		
 		String textLong = "Non-negative matrix factorization (NMF) is a group of algorithms in multivariate analysis and " +
@@ -104,7 +104,7 @@ public class TestMatchUDFUtil extends TestCase {
 				"in that it enforces the constraint that the factors W and H must be non-negative, i.e., all " +
 				"elements must be equal to or greater than zero";
 		assertTrue(MatchUDFUtil.match(textLong, "non Negative matrix/factorization", "keyword", MatchType.WholePhrase, false));	 // split punctuation
-		assertTrue(!MatchUDFUtil.match(textLong, "non Negative matrix/factorization", "keyword", MatchType.WholePhrase, true));	 // sentence type
+		assertFalse(MatchUDFUtil.match(textLong, "non Negative matrix/factorization", "keyword", MatchType.WholePhrase, true));	 // sentence type
 		assertTrue(MatchUDFUtil.match(textLong, "non-Negative matrix / factorization", "keyword", MatchType.WholePhrase, true)); // sentence type
 		assertTrue(MatchUDFUtil.match(textLong, "factorizing matrices", "lcstr", MatchType.AllWords));
 		assertTrue(MatchUDFUtil.match(textLong, "principal component singular values", "edit", MatchType.AllWords));

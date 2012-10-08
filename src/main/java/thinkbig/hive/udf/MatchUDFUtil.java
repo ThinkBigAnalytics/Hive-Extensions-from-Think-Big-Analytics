@@ -119,6 +119,7 @@ public class MatchUDFUtil {
         MatchAlgorithm algo = getAlgo(algoType);
 
         // get rid of the punctuation from text
+        // TODO: This appears to be redundant with subsequent steps below. Is it??
         if (!sentenceStyle) {
             text = toCanoncial(text);
         }
@@ -181,7 +182,7 @@ public class MatchUDFUtil {
                     if (found)
                         return true;
                 }
-                // ToDo: add weights to words from the pattern
+                // TODO: add weights to words from the pattern
             }
         }
         //System.out.println(found);
