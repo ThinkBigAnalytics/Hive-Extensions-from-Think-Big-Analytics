@@ -23,7 +23,6 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import org.apache.hadoop.hive.serde2.objectinspector.*;
-import org.apache.hadoop.hive.serde2.objectinspector.ReflectionStructObjectInspector.MyField;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorUtils;
 import org.apache.hadoop.util.ReflectionUtils;

@@ -24,8 +24,6 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.IntWritable;
 
-import thinkbig.hive.udf.MatchUDFUtil.MatchType;
-
 public final class UDFCountMatchPattern extends UDF {
   public IntWritable evaluate(final Text text, final Text pattern, Text algoType) {
     if (text == null || pattern == null || algoType == null) { return null; }

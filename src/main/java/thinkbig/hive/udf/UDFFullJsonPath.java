@@ -89,8 +89,8 @@ import org.apache.hadoop.io.Text;
       }
     if (res == null) return null;
     result.clear();
-    if (res instanceof List) {
-	for (Object o : (List)res) {
+    if (res instanceof List<?>) {
+	for (Object o : (List<?>)res) {
 	    // would be more efficient by keeping N cached text's...
 	    Text t = new Text();
 	    t.set(o.toString());
