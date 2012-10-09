@@ -4,7 +4,7 @@
 
 	<groupId>thinkbig</groupId>
 	<artifactId>hive-ext-thinkbig</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.0</version>
 	<packaging>jar</packaging>
 
 	<name>hive-ext-thinkbig</name>
@@ -64,35 +64,6 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>cdh.repo</id>
-			<url>https://repository.cloudera.com/content/repositories/releases</url>
-			<name>Cloudera Release Repository</name>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>cdh.snapshot.repo</id>
-			<url>https://repository.cloudera.com/content/repositories/snapshots</url>
-			<name>Cloudera Snapshot Repository</name>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-<!--
-		<repository>
-			<id>temp-thrift</id>
-			<name>Thrift 0.2.0</name>
-			<url>http://people.apache.org/~rawson/repo/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
--->
-		<repository>
 			<id>java.net</id>
 			<name>Java.Net</name>
 			<url>http://download.java.net/maven/2/</url>
@@ -125,6 +96,40 @@
 	      </snapshots>
 	    </repository>
 
+	   	<!--
+	   	Currently we only use this repo for jdo2-api-2.3-ec, which is required by hive-metastore, 
+	   	which is required by hive-exec. Unfortunately, the maven.org repo doesn't have this version
+	   	of jdo :(
+	   	-->
+		<repository>
+			<id>cdh.repo</id>
+			<url>https://repository.cloudera.com/content/groups/cdh-build</url>
+			<name>Cloudera Release Repository</name>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+<!--
+		<repository>
+			<id>cdh.snapshot.repo</id>
+			<url>https://repository.cloudera.com/content/repositories/snapshots</url>
+			<name>Cloudera Snapshot Repository</name>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>temp-thrift</id>
+			<name>Thrift 0.2.0</name>
+			<url>http://people.apache.org/~rawson/repo/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+-->
 	</repositories>
 	
 	<dependencies>
@@ -136,24 +141,22 @@
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
-			<version>0.20.2-cdh3u0</version>
+			<version>1.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase</artifactId>
-			<version>0.90.1-cdh3u0</version>
+			<version>0.94.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.hadoop.hive</groupId>
+			<groupId>org.apache.hive</groupId>
 			<artifactId>hive-exec</artifactId>
-			<version>0.7.0-cdh3u0</version>
+			<version>0.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.flume</groupId>
-			<artifactId>flume</artifactId>
-			<version>0.9.3-cdh3u0</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<groupId>org.apache.flume</groupId>
+			<artifactId>flume-ng-sdk</artifactId>
+			<version>1.2.0</version>
 		</dependency>		
 <!--		<dependency>
 			<groupId>com.jayway</groupId>
@@ -182,4 +185,5 @@
 			<version>1.2.16</version>
 		</dependency>
 	</dependencies>
+	<description>This release upgrades support to Hive v0.9.0 and Hadoop v1.0.3. It also replaces the Cloudera jar dependencies with Apache dependencies, but it should be compatible with Cloudera's CDH4uN releases of Hive and MR1.</description>
 </project>

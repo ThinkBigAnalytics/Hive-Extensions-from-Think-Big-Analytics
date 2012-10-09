@@ -63,6 +63,15 @@ public class BeansStructObjectInspector extends SettableStructObjectInspector {
         public String toString() {
             return propertyDescriptor.toString();
         }
+
+        /**
+         * Return the field's "short description" (defaults to its name) as the comment. 
+         * TODO Are we returning the correct data here?
+         */
+		@Override
+		public String getFieldComment() {
+			return propertyDescriptor.getShortDescription();
+		}
     }
 
     Class<?> objectClass;
