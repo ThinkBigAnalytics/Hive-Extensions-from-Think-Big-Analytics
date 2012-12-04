@@ -1,6 +1,6 @@
 # A collection of extensions for Hive.
 
-Currently, this package provides three UDFs that enable more sophisticated JSON operations, e.g.,
+## Currently, this package provides three UDFs that enable more sophisticated JSON operations, e.g.,
 
     create temporary function get_json_full as 'thinkbig.hive.udf.UDFFullJsonPath';
     create temporary function array_offset as 'thinkbig.hive.udf.UDFArrayOffset';
@@ -19,6 +19,37 @@ The following query will return "yes":
 You can also use more advanced JSONPath operations like the following (which also returns "yes"):
 
     get_json_full(json, '$.*[?(@.KEY=two)].val')[0]
+
+
+## Additionally, a Rank function is provided
+
+Example usage:
+add jar s3://tba.douglasmoore.code/hive-ext-thinkbig-2.0.jar;
+create temporary function rank as 'thinkbig.hive.udf.Rank';
+select hashtag, timebucket, rank(hashtag) rank from trending_count order by hashtag, timebucket;
+
+
+And in an other example, the query below is an example of MD5 and detunixtimestamp
+
+	insert overwrite table CleanImpression
+	  PARTITION (year, month, day)
+	  select
+	    coalesce(userCookieId,MD5(concat_ws(":",ipAddress,userAgent))),
+	    pub,
+	    page,
+	    viewDateMillis,
+	    advertiser,
+	    year,
+	    month,
+	    day
+	  from AdImpression
+	  where (
+	    detunixtimestamp(concat(year,month,day,'UTC'),'yyyyMMddzzz')>=${FROM_TS}-24*60*60 AND
+	    detunixtimestamp(concat(year,month,day,'UTC'),'yyyyMMddzzz')<=${TO_TS}
+	  );
+
+
+
 
 ## Version Notes
 
