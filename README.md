@@ -25,6 +25,7 @@ You can also use more advanced JSONPath operations like the following (which als
 ## Rank, MD5, detunixtimestamp 
 
 Example usage of the Rank function:
+
 	add jar s3://tba.douglasmoore.code/hive-ext-thinkbig-2.0.jar;
 	create temporary function rank as 'thinkbig.hive.udf.Rank';
 	select hashtag, timebucket, rank(hashtag) rank from trending_count order by hashtag, timebucket;
