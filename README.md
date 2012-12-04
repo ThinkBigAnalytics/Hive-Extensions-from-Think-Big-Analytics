@@ -2,9 +2,9 @@
 
 Currently, this package provides three UDFs that enable more sophisticated JSON operations, e.g.,
 
-    create temporary function get_json_full as 'com.thinkbiganalytics.hive.udf.UDFFullJsonPath';
-    create temporary function array_offset as 'com.thinkbiganalytics.hive.udf.UDFArrayOffset';
-    create temporary function array_deref as 'com.thinkbiganalytics.hive.udf.UDFArrayDeref';
+    create temporary function get_json_full as 'thinkbig.hive.udf.UDFFullJsonPath';
+    create temporary function array_offset as 'thinkbig.hive.udf.UDFArrayOffset';
+    create temporary function array_deref as 'thinkbig.hive.udf.UDFArrayDeref';
 
 For example, for the following the `JSON` string:
 
