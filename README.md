@@ -1,6 +1,7 @@
 # A collection of extensions for Hive.
 
-## Currently, this package provides three UDFs that enable more sophisticated JSON operations, e.g.,
+## Sophisticated JSON operations
+Currently, this package provides three UDFs that enable more sophisticated JSON operations, e.g.,
 
     create temporary function get_json_full as 'thinkbig.hive.udf.UDFFullJsonPath';
     create temporary function array_offset as 'thinkbig.hive.udf.UDFArrayOffset';
@@ -21,15 +22,15 @@ You can also use more advanced JSONPath operations like the following (which als
     get_json_full(json, '$.*[?(@.KEY=two)].val')[0]
 
 
-## Additionally, a Rank function is provided
+## Rank, MD5, detunixtimestamp 
 
-Example usage:
-add jar s3://tba.douglasmoore.code/hive-ext-thinkbig-2.0.jar;
-create temporary function rank as 'thinkbig.hive.udf.Rank';
-select hashtag, timebucket, rank(hashtag) rank from trending_count order by hashtag, timebucket;
+Example usage of the Rank function:
+	add jar s3://tba.douglasmoore.code/hive-ext-thinkbig-2.0.jar;
+	create temporary function rank as 'thinkbig.hive.udf.Rank';
+	select hashtag, timebucket, rank(hashtag) rank from trending_count order by hashtag, timebucket;
 
 
-And in an other example, the query below is an example of MD5 and detunixtimestamp
+And in an other example, the query below is an example of MD5 and detunixtimestamp:
 
 	insert overwrite table CleanImpression
 	  PARTITION (year, month, day)
@@ -47,7 +48,6 @@ And in an other example, the query below is an example of MD5 and detunixtimesta
 	    detunixtimestamp(concat(year,month,day,'UTC'),'yyyyMMddzzz')>=${FROM_TS}-24*60*60 AND
 	    detunixtimestamp(concat(year,month,day,'UTC'),'yyyyMMddzzz')<=${TO_TS}
 	  );
-
 
 
 
