@@ -1,5 +1,7 @@
 # A collection of extensions for Hive.
 
+*Copyright (C) 2010-2014 Think Big Analytics, Inc. All Rights Reserved.*
+
 ## Sophisticated JSON operations
 Currently, this package provides three UDFs that enable more sophisticated JSON operations, e.g.,
 
